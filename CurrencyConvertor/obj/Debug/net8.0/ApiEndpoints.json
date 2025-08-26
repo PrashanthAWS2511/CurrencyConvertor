@@ -1,0 +1,81 @@
+[
+  {
+    "ContainingType": "CurrencyConvertor.Controllers.AuthController",
+    "Method": "GetToken",
+    "RelativePath": "api/Auth/token",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "role",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CurrencyConvertor.Controllers.ExchangeRatesController",
+    "Method": "ConvertPost",
+    "RelativePath": "api/v{version}/ExchangeRates/convert",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "CurrencyConvertor.Models.ConvertRequest",
+        "IsRequired": true
+      },
+      {
+        "Name": "version",
+        "Type": "",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CurrencyConvertor.Controllers.ExchangeRatesController",
+    "Method": "GetHistoricalRates",
+    "RelativePath": "api/v{version}/ExchangeRates/history",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "historicalRatesRequest",
+        "Type": "CurrencyConvertor.Models.HistoricalRatesRequest",
+        "IsRequired": true
+      },
+      {
+        "Name": "version",
+        "Type": "",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CurrencyConvertor.Controllers.ExchangeRatesController",
+    "Method": "GetLatestExchangeRates",
+    "RelativePath": "api/v{version}/ExchangeRates/latest/{baseCurrency}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "baseCurrency",
+        "Type": "System.String",
+        "IsRequired": true
+      },
+      {
+        "Name": "version",
+        "Type": "",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  }
+]
