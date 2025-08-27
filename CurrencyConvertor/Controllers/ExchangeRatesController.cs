@@ -24,9 +24,9 @@ namespace CurrencyConvertor.Controllers
 
         [HttpGet("latest/{baseCurrency}")]
         [Authorize(Policy = "UserOnly")]
-        public async Task<IActionResult> GetLatestExchangeRates(string baseCurrency)
+        public async Task<IActionResult> GetLatestExchangeRates(string baseCurrency, [FromQuery] string provider = null)
         {
-            var exchangeRates = await _exchangeRatesService.FetchExchangeRatesAsync(baseCurrency);
+            var exchangeRates = await _exchangeRatesService.FetchExchangeRatesAsync(baseCurrency, provider);
             if (exchangeRates == null)
             {
                 return NotFound();
@@ -36,7 +36,7 @@ namespace CurrencyConvertor.Controllers
 
         [HttpPost("convert")]
         [Authorize(Policy = "UserOnly")]
-        public async Task<IActionResult> ConvertPost([FromBody] ConvertRequest request)
+        public async Task<IActionResult> ConvertPost([FromBody] ConvertRequest request, [FromQuery] string provider = null)
         {
             var fromCurrency = request?.From?.ToUpper();
             var toCurrency = request?.To?.ToUpper();
@@ -49,7 +49,7 @@ namespace CurrencyConvertor.Controllers
                 return BadRequest("Conversion involving TRY, PLN, THB, or MXN is not allowed.");
             }
 
-            var result = await _exchangeRatesService.ConvertCurrencyAsync(request.Amount, fromCurrency, toCurrency);
+            var result = await _exchangeRatesService.ConvertCurrencyAsync(request.Amount, fromCurrency, toCurrency, provider);
             if (result == null)
                 return BadRequest("Target currency not supported.");
 
@@ -59,12 +59,19 @@ namespace CurrencyConvertor.Controllers
         [HttpPost("history")]
         [Authorize(Policy = "AdminOnly")]
         public async Task<IActionResult> GetHistoricalRates(
-            [FromBody] HistoricalRatesRequest historicalRatesRequest)
+            [FromBody] HistoricalRatesRequest historicalRatesRequest, [FromQuery] string provider = null)
         {
             if (string.IsNullOrWhiteSpace(historicalRatesRequest.BaseCurrency) || string.IsNullOrWhiteSpace(historicalRatesRequest.StartDate) || string.IsNullOrWhiteSpace(historicalRatesRequest.EndDate))
                 return BadRequest("baseCurrency, startDate, and endDate are required.");
 
-            var history = await _exchangeRatesService.FetchHistoricalRatesAsync(historicalRatesRequest.BaseCurrency.ToUpper(), historicalRatesRequest.StartDate, historicalRatesRequest.EndDate, historicalRatesRequest.Page, historicalRatesRequest.PageSize);
+            var history = await _exchangeRatesService.FetchHistoricalRatesAsync(
+                historicalRatesRequest.BaseCurrency.ToUpper(),
+                historicalRatesRequest.StartDate,
+                historicalRatesRequest.EndDate,
+                historicalRatesRequest.Page,
+                historicalRatesRequest.PageSize,
+                provider);
+
             if (history == null)
                 return NotFound();
 

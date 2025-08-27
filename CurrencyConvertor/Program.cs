@@ -32,6 +32,9 @@ public class Program
         builder.Services.AddControllers();
         builder.Services.AddHttpClient();
         builder.Services.AddHttpContextAccessor();
+        builder.Services.AddScoped<IExchangeRateProvider, ProviderAExchangeRateProvider>();
+        // builder.Services.AddScoped<IExchangeRateProvider, ProviderBExchangeRateProvider>(); // Add more providers as needed
+        builder.Services.AddScoped<ExchangeRateProviderFactory>();
         builder.Services.AddScoped<ExchangeRatesService>();
 
         builder.Services.AddEndpointsApiExplorer();

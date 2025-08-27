@@ -27,19 +27,12 @@ public class ExchangeRatesControllerTests : IClassFixture<WebApplicationFactory<
             Rates = new() { { "EUR", 0.92m }, { "GBP", 0.78m } }
         };
 
-        var httpClientFactoryMock = new Mock<IHttpClientFactory>();
-        var httpContextAccessorMock = new Mock<IHttpContextAccessor>();
-        var configurationMock = new Mock<IConfiguration>();
-        configurationMock.Setup(c => c["ExchangeRatesApi:BaseUrl"]).Returns("https://api.frankfurter.app/v1");
-        var memoryCacheMock = new Mock<IMemoryCache>();
+        var exchangeRateProviderFactory = new ExchangeRateProviderFactory(new List<IExchangeRateProvider>());
 
         var serviceMock = new Mock<ExchangeRatesService>(
-            httpClientFactoryMock.Object,
-            httpContextAccessorMock.Object,
-            configurationMock.Object,
-            memoryCacheMock.Object
+            exchangeRateProviderFactory
         );
-        serviceMock.Setup(s => s.FetchExchangeRatesAsync(baseCurrency))
+        serviceMock.Setup(s => s.FetchExchangeRatesAsync(baseCurrency,null))
             .ReturnsAsync(expectedResponse);
 
         var controller = new ExchangeRatesController(serviceMock.Object);
@@ -58,19 +51,12 @@ public class ExchangeRatesControllerTests : IClassFixture<WebApplicationFactory<
     {
         // Arrange
         var baseCurrency = "USD";
-        var httpClientFactoryMock = new Mock<IHttpClientFactory>();
-        var httpContextAccessorMock = new Mock<IHttpContextAccessor>();
-        var configurationMock = new Mock<IConfiguration>();
-        configurationMock.Setup(c => c["ExchangeRatesApi:BaseUrl"]).Returns("https://api.frankfurter.app/v1");
-        var memoryCacheMock = new Mock<IMemoryCache>();
+        var exchangeRateProviderFactory = new ExchangeRateProviderFactory(new List<IExchangeRateProvider>());
 
         var serviceMock = new Mock<ExchangeRatesService>(
-            httpClientFactoryMock.Object,
-            httpContextAccessorMock.Object,
-            configurationMock.Object,
-            memoryCacheMock.Object
+            exchangeRateProviderFactory
         );
-        serviceMock.Setup(s => s.FetchExchangeRatesAsync(baseCurrency))
+        serviceMock.Setup(s => s.FetchExchangeRatesAsync(baseCurrency,null))
             .ReturnsAsync((ExchangeRatesResponse)null);
 
         var controller = new ExchangeRatesController(serviceMock.Object);
@@ -89,19 +75,12 @@ public class ExchangeRatesControllerTests : IClassFixture<WebApplicationFactory<
     public async Task ReturnsNotFound_WhenBaseCurrencyIsInvalid(string baseCurrency)
     {
         // Arrange
-        var httpClientFactoryMock = new Mock<IHttpClientFactory>();
-        var httpContextAccessorMock = new Mock<IHttpContextAccessor>();
-        var configurationMock = new Mock<IConfiguration>();
-        configurationMock.Setup(c => c["ExchangeRatesApi:BaseUrl"]).Returns("https://api.frankfurter.app/v1");
-        var memoryCacheMock = new Mock<IMemoryCache>();
+        var exchangeRateProviderFactory = new ExchangeRateProviderFactory(new List<IExchangeRateProvider>());
 
         var serviceMock = new Mock<ExchangeRatesService>(
-            httpClientFactoryMock.Object,
-            httpContextAccessorMock.Object,
-            configurationMock.Object,
-            memoryCacheMock.Object
+            exchangeRateProviderFactory
         );
-        serviceMock.Setup(s => s.FetchExchangeRatesAsync(baseCurrency))
+        serviceMock.Setup(s => s.FetchExchangeRatesAsync(baseCurrency, null))
             .ReturnsAsync((ExchangeRatesResponse)null);
 
         var controller = new ExchangeRatesController(serviceMock.Object);
@@ -133,19 +112,12 @@ public class ExchangeRatesControllerTests : IClassFixture<WebApplicationFactory<
             Date = "2025-08-26"
         };
 
-        var httpClientFactoryMock = new Mock<IHttpClientFactory>();
-        var httpContextAccessorMock = new Mock<IHttpContextAccessor>();
-        var configurationMock = new Mock<IConfiguration>();
-        configurationMock.Setup(c => c["ExchangeRatesApi:BaseUrl"]).Returns("https://api.frankfurter.app/v1");
-        var memoryCacheMock = new Mock<IMemoryCache>();
+        var exchangeRateProviderFactory = new ExchangeRateProviderFactory(new List<IExchangeRateProvider>());
 
         var serviceMock = new Mock<ExchangeRatesService>(
-            httpClientFactoryMock.Object,
-            httpContextAccessorMock.Object,
-            configurationMock.Object,
-            memoryCacheMock.Object
+            exchangeRateProviderFactory
         );
-        serviceMock.Setup(s => s.ConvertCurrencyAsync(request.Amount, request.From.ToUpper(), request.To.ToUpper()))
+        serviceMock.Setup(s => s.ConvertCurrencyAsync(request.Amount, request.From.ToUpper(), request.To.ToUpper(),null))
             .ReturnsAsync(expectedResult);
 
         var controller = new ExchangeRatesController(serviceMock.Object);
@@ -163,17 +135,10 @@ public class ExchangeRatesControllerTests : IClassFixture<WebApplicationFactory<
     public async Task ReturnsBadRequest_WhenRequestIsNull()
     {
         // Arrange
-        var httpClientFactoryMock = new Mock<IHttpClientFactory>();
-        var httpContextAccessorMock = new Mock<IHttpContextAccessor>();
-        var configurationMock = new Mock<IConfiguration>();
-        configurationMock.Setup(c => c["ExchangeRatesApi:BaseUrl"]).Returns("https://api.frankfurter.app/v1");
-        var memoryCacheMock = new Mock<IMemoryCache>();
+        var exchangeRateProviderFactory = new ExchangeRateProviderFactory(new List<IExchangeRateProvider>());
 
         var serviceMock = new Mock<ExchangeRatesService>(
-            httpClientFactoryMock.Object,
-            httpContextAccessorMock.Object,
-            configurationMock.Object,
-            memoryCacheMock.Object
+            exchangeRateProviderFactory
         );
         var controller = new ExchangeRatesController(serviceMock.Object);
 
@@ -202,17 +167,11 @@ public class ExchangeRatesControllerTests : IClassFixture<WebApplicationFactory<
             From = from,
             To = to
         };
-        var httpClientFactoryMock = new Mock<IHttpClientFactory>();
-        var httpContextAccessorMock = new Mock<IHttpContextAccessor>();
-        var configurationMock = new Mock<IConfiguration>();
-        configurationMock.Setup(c => c["ExchangeRatesApi:BaseUrl"]).Returns("https://api.frankfurter.app/v1");
-        var memoryCacheMock = new Mock<IMemoryCache>();
+
+        var exchangeRateProviderFactory = new ExchangeRateProviderFactory(new List<IExchangeRateProvider>());
 
         var serviceMock = new Mock<ExchangeRatesService>(
-            httpClientFactoryMock.Object,
-            httpContextAccessorMock.Object,
-            configurationMock.Object,
-            memoryCacheMock.Object
+            exchangeRateProviderFactory
         );
         var controller = new ExchangeRatesController(serviceMock.Object);
 
@@ -239,20 +198,13 @@ public class ExchangeRatesControllerTests : IClassFixture<WebApplicationFactory<
             From = from,
             To = to
         };
-        var httpClientFactoryMock = new Mock<IHttpClientFactory>();
-        var httpContextAccessorMock = new Mock<IHttpContextAccessor>();
-        var configurationMock = new Mock<IConfiguration>();
-        configurationMock.Setup(c => c["ExchangeRatesApi:BaseUrl"]).Returns("https://api.frankfurter.app/v1");
-        var memoryCacheMock = new Mock<IMemoryCache>();
+        var exchangeRateProviderFactory = new ExchangeRateProviderFactory(new List<IExchangeRateProvider>());
 
         var serviceMock = new Mock<ExchangeRatesService>(
-            httpClientFactoryMock.Object,
-            httpContextAccessorMock.Object,
-            configurationMock.Object,
-            memoryCacheMock.Object
+            exchangeRateProviderFactory
         );
         var controller = new ExchangeRatesController(serviceMock.Object);
-
+        
         // Act
         var result = await controller.ConvertPost(request);
 
@@ -272,19 +224,12 @@ public class ExchangeRatesControllerTests : IClassFixture<WebApplicationFactory<
             From = "USD",
             To = "EUR"
         };
-        var httpClientFactoryMock = new Mock<IHttpClientFactory>();
-        var httpContextAccessorMock = new Mock<IHttpContextAccessor>();
-        var configurationMock = new Mock<IConfiguration>();
-        configurationMock.Setup(c => c["ExchangeRatesApi:BaseUrl"]).Returns("https://api.frankfurter.app/v1");
-        var memoryCacheMock = new Mock<IMemoryCache>();
+        var exchangeRateProviderFactory = new ExchangeRateProviderFactory(new List<IExchangeRateProvider>());
 
         var serviceMock = new Mock<ExchangeRatesService>(
-            httpClientFactoryMock.Object,
-            httpContextAccessorMock.Object,
-            configurationMock.Object,
-            memoryCacheMock.Object
+            exchangeRateProviderFactory
         );
-        serviceMock.Setup(s => s.ConvertCurrencyAsync(request.Amount, request.From.ToUpper(), request.To.ToUpper()))
+        serviceMock.Setup(s => s.ConvertCurrencyAsync(request.Amount, request.From.ToUpper(), request.To.ToUpper(),null))
             .ReturnsAsync((ConvertResult)null);
 
         var controller = new ExchangeRatesController(serviceMock.Object);
@@ -325,24 +270,17 @@ public class ExchangeRatesControllerTests : IClassFixture<WebApplicationFactory<
             }
         };
 
-        var httpClientFactoryMock = new Mock<IHttpClientFactory>();
-        var httpContextAccessorMock = new Mock<IHttpContextAccessor>();
-        var configurationMock = new Mock<IConfiguration>();
-        configurationMock.Setup(c => c["ExchangeRatesApi:BaseUrl"]).Returns("https://api.frankfurter.app/v1");
-        var memoryCacheMock = new Mock<IMemoryCache>();
+        var exchangeRateProviderFactory = new ExchangeRateProviderFactory(new List<IExchangeRateProvider>());
 
         var serviceMock = new Mock<ExchangeRatesService>(
-            httpClientFactoryMock.Object,
-            httpContextAccessorMock.Object,
-            configurationMock.Object,
-            memoryCacheMock.Object
+            exchangeRateProviderFactory
         );
         serviceMock.Setup(s => s.FetchHistoricalRatesAsync(
                 request.BaseCurrency.ToUpper(),
                 request.StartDate,
                 request.EndDate,
                 request.Page,
-                request.PageSize))
+                request.PageSize, null))
             .ReturnsAsync(expectedResponse);
 
         var controller = new ExchangeRatesController(serviceMock.Object);
@@ -369,24 +307,17 @@ public class ExchangeRatesControllerTests : IClassFixture<WebApplicationFactory<
             PageSize = 10
         };
 
-        var httpClientFactoryMock = new Mock<IHttpClientFactory>();
-        var httpContextAccessorMock = new Mock<IHttpContextAccessor>();
-        var configurationMock = new Mock<IConfiguration>();
-        configurationMock.Setup(c => c["ExchangeRatesApi:BaseUrl"]).Returns("https://api.frankfurter.app/v1");
-        var memoryCacheMock = new Mock<IMemoryCache>();
+        var exchangeRateProviderFactory = new ExchangeRateProviderFactory(new List<IExchangeRateProvider>());
 
         var serviceMock = new Mock<ExchangeRatesService>(
-            httpClientFactoryMock.Object,
-            httpContextAccessorMock.Object,
-            configurationMock.Object,
-            memoryCacheMock.Object
+            exchangeRateProviderFactory
         );
         serviceMock.Setup(s => s.FetchHistoricalRatesAsync(
                 request.BaseCurrency.ToUpper(),
                 request.StartDate,
                 request.EndDate,
                 request.Page,
-                request.PageSize))
+                request.PageSize, null))
             .ReturnsAsync((HistoricalRatesResponse)null);
 
         var controller = new ExchangeRatesController(serviceMock.Object);
@@ -417,17 +348,10 @@ public class ExchangeRatesControllerTests : IClassFixture<WebApplicationFactory<
             PageSize = 10
         };
 
-        var httpClientFactoryMock = new Mock<IHttpClientFactory>();
-        var httpContextAccessorMock = new Mock<IHttpContextAccessor>();
-        var configurationMock = new Mock<IConfiguration>();
-        configurationMock.Setup(c => c["ExchangeRatesApi:BaseUrl"]).Returns("https://api.frankfurter.app/v1");
-        var memoryCacheMock = new Mock<IMemoryCache>();
+        var exchangeRateProviderFactory = new ExchangeRateProviderFactory(new List<IExchangeRateProvider>());
 
         var serviceMock = new Mock<ExchangeRatesService>(
-            httpClientFactoryMock.Object,
-            httpContextAccessorMock.Object,
-            configurationMock.Object,
-            memoryCacheMock.Object
+            exchangeRateProviderFactory
         );
         var controller = new ExchangeRatesController(serviceMock.Object);
 
